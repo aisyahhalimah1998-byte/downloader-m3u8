@@ -1,4 +1,5 @@
 flask
 flask-socketio
 gunicorn
-simple-websocket
+eventlet
+requests
