@@ -1,0 +1,37 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3U8 Downloader</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>M3U8 Downloader</h1>
+
+    <textarea id="url" placeholder="Paste .m3u8 URL here"></textarea>
+
+    <button id="downloadBtn">
+        Download
+    </button>
+
+    <div class="status" id="status">
+        Ready
+    </div>
+
+    <div class="logs" id="logs"></div>
+
+</div>
+
+<script src="/static/app.js"></script>
+
+</body>
+</html>
