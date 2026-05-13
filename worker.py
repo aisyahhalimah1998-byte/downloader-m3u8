@@ -1,24 +1,31 @@
-# worker.py
-
 import os
 import uuid
+import threading
 import subprocess
-from flask_socketio import emit
 
 DOWNLOAD_FOLDER = "downloads"
 
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-def download_m3u8(socketio, url):
+
+def run_ffmpeg(socketio, url):
+
     try:
+
         filename = f"{uuid.uuid4().hex}.mp4"
-        output_path = os.path.join(DOWNLOAD_FOLDER, filename)
+
+        output_path = os.path.join(
+            DOWNLOAD_FOLDER,
+            filename
+        )
 
         cmd = [
             "ffmpeg",
-            "-i", url,
-            "-c", "copy",
-            "-bsf:a", "aac_adtstoasc",
+            "-y",
+            "-i",
+            url,
+            "-c",
+            "copy",
             output_path
         ]
 
@@ -30,22 +37,38 @@ def download_m3u8(socketio, url):
         )
 
         for line in process.stdout:
-            socketio.emit("log", {"message": line})
+            socketio.emit("log", {
+                "message": line
+            })
 
         process.wait()
 
         if process.returncode == 0:
+
             socketio.emit("done", {
                 "success": True,
                 "file": filename
             })
+
         else:
+
             socketio.emit("done", {
                 "success": False
             })
 
     except Exception as e:
+
         socketio.emit("done", {
             "success": False,
             "error": str(e)
         })
+
+
+def start_download(socketio, url):
+
+    thread = threading.Thread(
+        target=run_ffmpeg,
+        args=(socketio, url)
+    )
+
+    thread.start()
