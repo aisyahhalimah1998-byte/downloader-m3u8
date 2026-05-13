@@ -1,22 +1,24 @@
-// static/app.js
-
 const socket = io();
 
-const button = document.getElementById("downloadBtn");
+const btn = document.getElementById("downloadBtn");
+
 const urlInput = document.getElementById("url");
+
 const logs = document.getElementById("logs");
+
 const statusDiv = document.getElementById("status");
 
-button.addEventListener("click", async () => {
+btn.addEventListener("click", async () => {
 
     const url = urlInput.value.trim();
 
     if (!url) {
-        alert("Masukan URL M3U8");
+        alert("Masukan URL");
         return;
     }
 
     logs.innerHTML = "";
+
     statusDiv.innerText = "Downloading...";
 
     const response = await fetch("/download", {
@@ -39,9 +41,7 @@ button.addEventListener("click", async () => {
 
 socket.on("log", data => {
 
-    logs.innerHTML += `
-        <div>${data.message}</div>
-    `;
+    logs.innerHTML += `<div>${data.message}</div>`;
 
     logs.scrollTop = logs.scrollHeight;
 
@@ -52,7 +52,6 @@ socket.on("done", data => {
     if (data.success) {
 
         statusDiv.innerHTML = `
-            Download selesai:
             <a href="/downloads/${data.file}" target="_blank">
                 Download File
             </a>
